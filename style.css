@@ -3,6 +3,7 @@ body {
     background-size: cover; /* Adjust size to cover the entire background */
     background-repeat: no-repeat; /* Prevent the image from repeating */
     background-position: center; /* Center the image */
+    background-attachment: fixed; /* This makes the background image fixed when scrolling */
   }
 
 body {
