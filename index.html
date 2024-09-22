@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+    <link rel="stylesheet" href="style.css"> 
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Grade Calculator</h1>
+
+        <form method="POST" onsubmit="calculateGrades(event)">
+            <label for="absences">Number of Absences:</label>
+            <input type="number" id="absences" name="absences" required oninput="checkAbsences()"><br><br>
+
+            <label for="prelim_grade">Prelim Exam Grade:</label>
+            <input type="number" id="prelim_grade" name="prelim_grade" required oninput="validateInput(this, 0, 100)"><br><br>
+
+            <label for="quizzes_grade">Quizzes Grade:</label>
+            <input type="number" id="quizzes_grade" name="quizzes_grade" required oninput="validateInput(this, 0, 100)"><br><br>
+
+            <label for="requirements_grade">Requirements Grade:</label>
+            <input type="number" id="requirements_grade" name="requirements_grade" required oninput="validateInput(this, 0, 100)"><br><br>
+
+            <label for="recitation_grade">Recitation Grade:</label>
+            <input type="number" id="recitation_grade" name="recitation_grade" required oninput="validateInput(this, 0, 100)"><br><br>
+
+            <button type="submit" id="submit-button">Calculate</button>
+            <div id="failed-message" style="display: none; color: red;">FAILED due to excessive absences.</div>
+        </form>
+
+        <div class="results">
+            <h2>Results:</h2>
+            <p>Prelim Grade: <span id="prelim-grade"></span></p>
+
+            <h3>To Pass with 75%:</h3>
+            <p>You need a Midterm Grade of: <span id="passing-midterm"></span></p>
+            <p>You need a Final Grade of: <span id="passing-final"></span></p>
+
+            <h3>To achieve Dean's Lister with 90%:</h3>
+            <p>You need a Midterm Grade of: <span id="deans-lister-midterm"></span></p>
+            <p>You need a Final Grade of: <span id="deans-lister-final"></span></p>
+        </div>
+    </div>
+    <py-script output="output"></py-script>
+
+    <script>
+        const absencesInput = document.getElementById('absences');
+        const submitButton = document.getElementById('submit-button');
+        const failedMessage = document.getElementById('failed-message');
+
+        const prelimGradeInput = document.getElementById('prelim_grade');
+        const quizzesGradeInput = document.getElementById('quizzes_grade');
+        const requirementsGradeInput = document.getElementById('requirements_grade');
+        const recitationGradeInput = document.getElementById('recitation_grade');
+
+        function checkAbsences() {
+            const absences = parseFloat(absencesInput.value);
+
+            if (absences >= 4) {
+                failedMessage.style.display = 'block'; // Show the message
+                submitButton.disabled = true;        // Disable the button
+
+                // Gray out other input fields
+                prelimGradeInput.disabled = true;
+                quizzesGradeInput.disabled = true;
+                requirementsGradeInput.disabled = true;
+                recitationGradeInput.disabled = true;
+
+                // Set the background color to light gray (optional)
+                prelimGradeInput.style.backgroundColor = "#f2f2f2";
+                quizzesGradeInput.style.backgroundColor = "#f2f2f2";
+                requirementsGradeInput.style.backgroundColor = "#f2f2f2";
+                recitationGradeInput.style.backgroundColor = "#f2f2f2";
+            } else {
+                failedMessage.style.display = 'none'; // Hide the message
+                submitButton.disabled = false;       // Enable the button
+
+                // Re-enable other input fields
+                prelimGradeInput.disabled = false;
+                quizzesGradeInput.disabled = false;
+                requirementsGradeInput.disabled = false;
+                recitationGradeInput.disabled = false;
+
+                // Reset the background color (optional)
+                prelimGradeInput.style.backgroundColor = "";
+                quizzesGradeInput.style.backgroundColor = "";
+                requirementsGradeInput.style.backgroundColor = "";
+                recitationGradeInput.style.backgroundColor = "";
+            }
+        }
+
+        function validateInput(inputElement, minValue, maxValue) {
+            let value = parseFloat(inputElement.value);
+            if (isNaN(value) || value < minValue || value > maxValue) {
+                alert(`Please enter a valid number between ${minValue} and ${maxValue}.`);
+                inputElement.value = ""; // Clear the input field
+            }
+        }
+
+        function calculateGrades(event) {
+            event.preventDefault();
+
+            const absences = parseFloat(document.getElementById('absences').value);
+            const prelimGrade = parseFloat(document.getElementById('prelim_grade').value);
+            const quizzesGrade = parseFloat(document.getElementById('quizzes_grade').value);
+            const requirementsGrade = parseFloat(document.getElementById('requirements_grade').value);
+            const recitationGrade = parseFloat(document.getElementById('recitation_grade').value);
+
+            // Attendance Grade
+            const attendanceGrade = 100 - (absences * 10);
+            if (absences >= 4) {
+                alert("FAILED due to excessive absences.");
+                return;
+            }
+
+            // Class Standing
+            const classStanding = (0.4 * quizzesGrade) + (0.3 * requirementsGrade) + (0.3 * recitationGrade);
+
+            // Prelim Grade 
+            const prelimGradeResult = (0.6 * prelimGrade) + (0.1 * attendanceGrade) + (0.3 * classStanding);
+
+            // Target Midterm and Final Grades for Passing (75%)
+            const remainingForPassing = 75 - (0.2 * prelimGradeResult);
+            const passingTargetMidterm = remainingForPassing / 0.8;
+            const passingTargetFinal = remainingForPassing / 0.8;
+
+            // Target Midterm and Final Grades for Dean's Lister (90%)
+            const remainingForDeansLister = 90 - (0.2 * prelimGradeResult);
+            const deansListerTargetMidterm = remainingForDeansLister / 0.8;
+            const deansListerTargetFinal = remainingForDeansLister / 0.8;
+
+            // Adjusting to match the expected results
+            const adjustedPassingMidterm = Math.round(passingTargetMidterm * 100) / 100;
+            const adjustedPassingFinal = Math.round(passingTargetFinal * 100) / 100;
+            const adjustedDeansListerMidterm = Math.round(deansListerTargetMidterm * 100) / 100;
+            const adjustedDeansListerFinal = Math.round(deansListerTargetFinal * 100) / 100;
+
+            // Display results
+            document.getElementById('prelim-grade').textContent = prelimGradeResult.toFixed(2);
+            document.getElementById('passing-midterm').textContent = adjustedPassingMidterm.toFixed(2);
+            document.getElementById('passing-final').textContent = adjustedPassingFinal.toFixed(2);
+            document.getElementById('deans-lister-midterm').textContent = adjustedDeansListerMidterm.toFixed(2);
+            document.getElementById('deans-lister-final').textContent = adjustedDeansListerFinal.toFixed(2);
+        }
+    </script>
+</body>
+</html>
