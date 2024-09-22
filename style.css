@@ -4,22 +4,10 @@ body {
     background-repeat: no-repeat; /* Prevent the image from repeating */
     background-position: center; /* Center the image */
     background-attachment: fixed; /* This makes the background image fixed when scrolling */
-  }
-
-body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-}
-
-.container {
-    width: 500px;
-    margin: 50px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #171B36;
 }
 
 h1, h2, h3 {
@@ -50,9 +38,6 @@ button[type="submit"] {
 
 .results {
     margin-top: 20px;
-}
-
-.results p {
     margin-bottom: 10px;
 }
 
@@ -61,14 +46,13 @@ body {
     font-family: 'Roboto', sans-serif; /* Pixel Android font */
     margin: 0;
     padding: 0;
-    background-color: #f8f8f8; /* Dirty White */
     color: #333;
 }
 
 .container {
     width: 600px;
     margin: 50px auto;
-    background-color: #fff;
+    background-color: #E8E4C9 ;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
