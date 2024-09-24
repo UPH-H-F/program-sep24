@@ -41,6 +41,7 @@
             <h3>To achieve Dean's Lister with 90%:</h3>
             <p id="deans-lister-message">You need a Midterm Grade of: <span id="deans-lister-midterm"></span></p>
             <p id="deans-lister-final-message">You need a Final Grade of: <span id="deans-lister-final"></span></p>
+            <p id="deans-lister-fail-message" style="display: none; color: red;">You cannot achieve Dean's Lister with a 90% average.</p>
 
             <input type="hidden" id="prelim-grade" name="prelim-grade" value="">
             <input type="hidden" id="passing-midterm" name="passing-midterm" value="">
@@ -62,6 +63,7 @@
 
         const deansListerMessage = document.getElementById('deans-lister-message');
         const deansListerFinalMessage = document.getElementById('deans-lister-final-message');
+        const deansListerFailMessage = document.getElementById('deans-lister-fail-message');
 
         function checkAbsences() {
             const absences = parseFloat(absencesInput.value);
@@ -139,11 +141,11 @@
                 document.getElementById('deans-lister-final').textContent = adjustedDeansListerFinal.toFixed(2);
                 deansListerMessage.style.display = 'block';
                 deansListerFinalMessage.style.display = 'block';
+                deansListerFailMessage.style.display = 'none';
             } else {
-                deansListerMessage.textContent = "You cannot achieve Dean's Lister with a 90% average";
-                deansListerFinalMessage.textContent = "You cannot achieve Dean's Lister with a 90% average";
-                deansListerMessage.style.display = 'block';
-                deansListerFinalMessage.style.display = 'block';
+                deansListerMessage.style.display = 'none';
+                deansListerFinalMessage.style.display = 'none';
+                deansListerFailMessage.style.display = 'block';
             }
         }
     </script>
